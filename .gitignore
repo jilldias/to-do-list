@@ -1,0 +1,6 @@
+target/
+build/
+.gradle/
+/out/
+.vscode/
+/src/main/resources/application.properties

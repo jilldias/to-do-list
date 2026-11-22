@@ -5,22 +5,27 @@
 
 
 package com.example.to_do_list.models;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity //Cria uma tabela no banco de dados
 @Table(name = User.TABLE_NAME) //Define o nome da tabela através da variável
 
 public class User {
 
-    public interface CreateUser {} //Interface para validação de criação de usuário
+     public interface CreateUser {} //Interface para validação de criação de usuário
     public interface UpdateUser {} //Interface para validação de atualização de usuário
 
     public static final String TABLE_NAME = "users"; //Nome da tabela
@@ -46,7 +51,8 @@ public class User {
     @Size(groups = {CreateUser.class, UpdateUser.class}, min = 6, max = 100) //Define o tamanho mínimo e máximo do valor
     private String password; //Senha do usuário
 
-    //private List<Task> tasks = new ArrayList<>(); //Lista de tarefas associadas ao usuário
+    @OneToMany (mappedBy = "user") //Define o relacionamento com a tabela de tarefas
+    private List<Task> tasks = new ArrayList<>(); //Lista de tarefas associadas ao usuário
 
     public User() {
         // Construtor padrão necessário para o JPA
@@ -82,6 +88,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+     public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 
     @Override //Sobrescreve o método equals para comparar objetos User com base no id
